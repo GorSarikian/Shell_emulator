@@ -22,6 +22,17 @@ def cmd_cd(args: list[str]) -> str:
     return stub_command("cd", args)
 
 
+def cmd_conf_dump(shell) -> str:
+    """Выводит текущую конфигурацию оболочки в формате ключ-значение."""
+    if shell is None:
+        return "vfs_path: \nscript_path: "
+    lines = [
+        f"vfs_path: {shell.vfs_path}",
+        f"script_path: {shell.script_path or ''}",
+    ]
+    return "\n".join(lines)
+
+
 def cmd_exit(shell=None, args: list[str] = None) -> str:
     """Команда завершения сессии оболочки."""
     call_args = args or []
@@ -49,6 +60,8 @@ def execute_command(first_arg, second_arg=None, third_arg=None) -> str:
         return cmd_ls(args)
     if command == "cd":
         return cmd_cd(args)
+    if command == "conf-dump":
+        return cmd_conf_dump(shell)
     if command == "exit":
         return cmd_exit(shell, args)
     return f"shell: command not found: {command}"

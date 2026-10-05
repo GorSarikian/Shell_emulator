@@ -2,6 +2,7 @@
 
 import unittest
 
+from src.cli import ShellCLI
 from src.commands import CMD_EXIT_SIGNAL, execute_command, stub_command
 from src.parser import parse_line
 
@@ -49,6 +50,13 @@ class TestShellCommands(unittest.TestCase):
         """Проверка корректного сигнала выхода."""
         res = execute_command("exit", [])
         self.assertEqual(res, CMD_EXIT_SIGNAL)
+
+    def test_execute_conf_dump(self) -> None:
+        """Проверка вывода команды conf-dump."""
+        shell = ShellCLI(vfs_path="test_vfs", script_path="test.txt")
+        res = execute_command(shell, "conf-dump", [])
+        self.assertIn("vfs_path: test_vfs", res)
+        self.assertIn("script_path: test.txt", res)
 
     def test_execute_unknown_command(self) -> None:
         """Проверка реакции на неподдерживаемую команду."""
